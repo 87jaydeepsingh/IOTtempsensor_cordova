@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style type="text/css">
+            p{
+                font-family: calibri;
+                font-size: 17px;
+            }
+            .footer {
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+				background-color: #17a2b8;
+				color: white;
+				text-align: center;
+			}
+        </style>
+    </head>
+    <body onload="startTimer();">
+        <nav class="navbar navbar-expand-sm bg-info navbar-dark fixed-top">
+			<tag class="navbar-brand">Dashboard</tag>
+			<i class="fa fa-thermometer-full" aria-hidden="true" style="font-size:22px;color: white;"></i>
+		</nav><br><br>
+        <div class="container">
+            <br>
+              <div class="card" style="box-shadow: 2px 3px 2px;">
+                <div class="card-header bg-info" style="color:white;">Room 1 Status </div>
+                <div class="card-body">
+                    &nbsp;<i class="fa fa-thermometer-full" id="tp1" aria-hidden="true"></i><span id="r1"></span></i><br><br>
+                    <i class="fa fa-asterisk" id="fn1" aria-hidden="true"></i><span id="r2"></span><br><br>
+                    <i class="fa fa-free-code-camp" id="h1" aria-hidden="true"></i><span id="r3"></span><br><br>
+                </div> 
+              </div><br>
+			  
+               <div class="card" style="box-shadow: 2px 3px 2px;">
+                <div class="card-header" style="color:white;background-color: #FF4500;">Room 2 Status </div>
+                <div class="card-body">
+                        &nbsp;<i class="fa fa-thermometer-full" id="tp2" aria-hidden="true"></i><span id="r11"></span></i><br><br>
+                    <i class="fa fa-asterisk" id="fn2" aria-hidden="true"></i><span id="r12"></span><br><br>
+                    <i class="fa fa-free-code-camp" id="h2" aria-hidden="true"></i><span id="r13"></span><br><br>
+                </div> 
+              </div><br>
+              <br><br>
+         </div>
+         <div class="footer" style="padding-top:10px;padding-bottom: 10px;">
+			<icon style="color:white";><i class="fa fa-thermometer-full" style="font-size: 25px" aria-hidden="true"></i></icon>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="About.html" style="color:white";><i class="fa fa-info-circle" style="font-size: 25px" aria-hidden="true"></i></a>
+		</div>
+    </body>
+    <script type="text/javascript">
+    	function startTimer() {
+            timer = setInterval(function() {  
+            $(document).ready(function(){
+            $.ajax({
+                url: "https://api.thingspeak.com/channels/1448334/feeds.json?api_key=W77ZK540HFEXDIAI", 
+                type:'GET',
+                success: function(data){
+                    //first room
+                        $("#r1").empty();
+                        $("#r2").empty();
+                        $("#r3").empty();
+
+                    //second roomm
+                        $("#r11").empty();
+                        $("#r12").empty();
+                        $("#r13").empty();
+
+                    //first room data 
+                    	var t1=parseInt(data.feeds[data.feeds.length-1].field1);
+                        $("#r1").append("&nbsp;&nbsp;&nbsp;Temperature: "+data.feeds[data.feeds.length-1].field1+" &#8451");
+                        console.log(t1);
+                        if(t1<30 && t1>22)
+                        {
+                        	document.getElementById("tp1").style.color = "Orange";
+                        }
+                        else if(t1>30)
+                        {
+                        	document.getElementById("tp1").style.color = "Red";
+                        	$("#r1").append("&nbsp;&nbsp; very Hot");
+                        }
+                        else
+                        {
+                        	document.getElementById("tp1").style.color = "blue";
+                        }
+						var f1=data.feeds[data.feeds.length-1].field2;
+						if(f1=="0")
+						{
+							$("#r2").append("&nbsp;&nbsp;&nbsp;Fan is: OFF");
+							document.getElementById("fn1").className = "fa fa-asterisk";
+						}
+						else
+						{
+							$("#r2").append("&nbsp;&nbsp;&nbsp;Fan is: ON");
+							document.getElementById("fn1").className = "fa fa-asterisk fa-spin";
+						}
+						
+						var h1=data.feeds[data.feeds.length-1].field3;
+						if(h1=="0")
+						{
+							document.getElementById("h1").style.color = "Black";
+							$("#r3").append("&nbsp;&nbsp;Heater is : OFF");
+						}
+						else
+						{
+							$("#r3").append("&nbsp;&nbsp;Heater is : ON");
+							document.getElementById("h1").style.color = "Red";
+						}
+
+                    //second room data 
+                    	var t2=parseInt(data.feeds[data.feeds.length-1].field4);
+                        $("#r11").append("&nbsp;&nbsp;&nbsp;Temperature: "+data.feeds[data.feeds.length-1].field4+" &#8451");
+						if(t2<30 && t2>22)
+                        {
+                        	document.getElementById("tp2").style.color = "Orange";
+                        }
+                        else if(t2>30)
+                        {
+                        	document.getElementById("tp2").style.color = "Red";
+                        	$("#r11").append("&nbsp;&nbsp; very Hot");
+                        }
+                        else
+                        {
+                        	document.getElementById("tp2").style.color = "blue";
+                        }
+						var f2=data.feeds[data.feeds.length-1].field5;
+						if(f2=="0")
+						{
+							$("#r12").append("&nbsp;&nbsp;&nbsp;Fan is: OFF");
+							document.getElementById("fn2").className = "fa fa-asterisk";
+						}
+						else
+						{
+							$("#r12").append("&nbsp;&nbsp;&nbsp;Fan is: ON");
+							document.getElementById("fn2").className = "fa fa-asterisk fa-spin";
+						}
+                        
+						var h2=data.feeds[data.feeds.length-1].field6;
+						console.log(h2.slice(0,1))
+						if(h2.slice(0,1)=="0")
+						{
+							document.getElementById("h2").style.color = "Black";
+							$("#r13").append("&nbsp;&nbsp;Heater is : OFF");
+						}
+						else
+						{
+							$("#r13").append("&nbsp;&nbsp;Heater is : ON");
+							document.getElementById("h2").style.color = "Red";
+						}
+
+             }});
+    });
+             }, 2000);
+        }
+        
+    </script>
+</html>
